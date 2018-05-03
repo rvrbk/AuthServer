@@ -24,6 +24,19 @@ namespace AuthServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            services.Configure<Settings>(options =>
+            {
+                options.ConnectionString = Configuration.GetSection("MongoConnection:ConnectionString").Value;
+                options.Database = Configuration.GetSection("MongoConnection:Database").Value;
+            });
+
+            services.AddIdentityServer()
+                .AddDeveloperSigningCredential()
+                .AddInMemoryApiResources(Config.ApiResources)
+                .AddInMemoryClients(Config.ApiClients);
+
+            services.AddTransient<IOauthRepository, OauthRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -34,6 +47,7 @@ namespace AuthServer
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseIdentityServer();
             app.UseMvc();
         }
     }
