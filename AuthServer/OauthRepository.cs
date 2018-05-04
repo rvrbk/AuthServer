@@ -61,14 +61,21 @@ namespace AuthServer
 
         public IEnumerable<Client> GetClients()
         {
-            throw new NotImplementedException();
+            try
+            {
+                return _context.Clients.Find(client => client._id != null).ToList();
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
         }
 
         public Resource GetResource(ObjectId id)
         {
             try
             {
-                return _context.Resources.Find(resource => resource.BsonID == id).FirstOrDefault();
+                return _context.Resources.Find(resource => resource._id == id).FirstOrDefault();
             }
             catch (Exception e)
             {
@@ -78,7 +85,14 @@ namespace AuthServer
 
         public IEnumerable<Resource> GetResources()
         {
-            throw new NotImplementedException();
+            try
+            {
+                return _context.Resources.Find(resource => resource._id != null).ToList();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public bool RemoveClient(ObjectId id)
@@ -99,7 +113,7 @@ namespace AuthServer
         {
             try
             {
-                DeleteResult result = _context.Resources.DeleteOne(resource => resource.BsonID == id);
+                DeleteResult result = _context.Resources.DeleteOne(resource => resource._id == id);
 
                 return result.IsAcknowledged;
             }
@@ -127,7 +141,18 @@ namespace AuthServer
 
         public bool UpdateResource(ObjectId id, Resource resource)
         {
-            throw new NotImplementedException();
+            try
+            {
+                resource._id = id;
+
+                ReplaceOneResult result = _context.Resources.ReplaceOne(c => c._id == id, resource);
+
+                return result.IsAcknowledged;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
     }
 }

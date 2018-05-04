@@ -105,7 +105,7 @@ namespace AuthServer.Controllers
             }
             catch(Exception e)
             {
-                throw e;
+                return Json(e.Message);
             }
         }
 
@@ -130,7 +130,7 @@ namespace AuthServer.Controllers
             }
             catch (Exception e)
             {
-                throw e;
+                return Json(e.Message);
             }
         }
 
@@ -155,7 +155,64 @@ namespace AuthServer.Controllers
             }
             catch(Exception e)
             {
-                throw e;
+                return Json(e.Message);
+            }
+        }
+
+        [Route("resource/{id}")]
+        [HttpPut]
+        public IActionResult UpdateResource(string id, [FromBody]Resource resource)
+        {
+            try
+            {
+                ObjectId objectid = new ObjectId(id);
+
+                Resource update = _oauthRepository.GetResource(objectid);
+
+                if (update != null)
+                {
+                    _oauthRepository.UpdateResource(objectid, resource);
+
+                    return Json(objectid);
+                }
+
+                return Json(false);
+            }
+            catch (Exception e)
+            {
+                return Json(e.Message);
+            }
+        }
+
+        [Route("client")]
+        [HttpGet]
+        public IActionResult getClients()
+        {
+            try
+            {
+                IEnumerable<Client> clients = _oauthRepository.GetClients();
+
+                return Json(clients.ToJson());
+            }
+            catch(Exception e)
+            {
+                return Json(e.Message);
+            }
+        }
+
+        [Route("resource")]
+        [HttpGet]
+        public IActionResult getResources()
+        {
+            try
+            {
+                IEnumerable<Resource> resources = _oauthRepository.GetResources();
+
+                return Json(resources.ToJson());
+            }
+            catch (Exception e)
+            {
+                return Json(e.Message);
             }
         }
     }

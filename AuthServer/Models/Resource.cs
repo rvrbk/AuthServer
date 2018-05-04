@@ -10,7 +10,7 @@ namespace AuthServer.Models
     public class Resource
     {
         [BsonId]
-        public ObjectId BsonID { get; set; }
+        public ObjectId _id { get; set; }
         public string ResourceID { get; set; }
         public string ResourceName { get; set; }
         public string ResourceCode { get; set; }
