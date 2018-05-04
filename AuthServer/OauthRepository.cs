@@ -51,7 +51,7 @@ namespace AuthServer
         {
             try
             {
-                return _context.Clients.Find(client => client.BsonID == id).FirstOrDefault();
+                return _context.Clients.Find(client => client._id == id).FirstOrDefault();
             }
             catch(Exception e)
             {
@@ -85,7 +85,7 @@ namespace AuthServer
         {
             try
             {
-                DeleteResult result = _context.Clients.DeleteOne(client => client.BsonID == id);
+                DeleteResult result = _context.Clients.DeleteOne(client => client._id == id);
 
                 return result.IsAcknowledged;
             }
@@ -113,7 +113,9 @@ namespace AuthServer
         {
             try
             {
-                UpdateResult result = _context.Clients.UpdateOne(c => c.BsonID == id, client.ToJson());
+                client._id = id;
+
+                ReplaceOneResult result = _context.Clients.ReplaceOne(c => c._id == id, client);
 
                 return result.IsAcknowledged;
             }

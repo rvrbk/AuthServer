@@ -134,38 +134,22 @@ namespace AuthServer.Controllers
             }
         }
 
-        [Route("client")]
+        [Route("client/{id}")]
         [HttpPut]
-        public IActionResult UpdateClient([FromBody]Client client)
+        public IActionResult UpdateClient(string id, [FromBody]Client client)
         {
             try
             {
-                _oauthRepository.AddClient(client);
+                ObjectId objectid = new ObjectId(id);
 
-                return Json(client);
-            }
-            catch (Exception e)
-            {
-                return Json(e.Message);
-            }
-        }
+                Client update = _oauthRepository.GetClient(objectid);
 
-        /*[Route("client/{id}")]
-        [HttpPut]
-        public IActionResult UpdateClient([FromBody] Client update)
-        {
-            try
-            {
-                //ObjectId objectid = new ObjectId(id);
+                if(update != null)
+                {
+                    _oauthRepository.UpdateClient(objectid, client);
 
-                //Client client = _oauthRepository.GetClient(objectid);
-
-                //if(client != null)
-                //{
-                    //_oauthRepository.UpdateClient(objectid, update);
-
-                    //return Json(objectid);
-                //}
+                    return Json(objectid);
+                }
 
                 return Json(false);
             }
@@ -173,6 +157,6 @@ namespace AuthServer.Controllers
             {
                 throw e;
             }
-        }*/
+        }
     }
 }

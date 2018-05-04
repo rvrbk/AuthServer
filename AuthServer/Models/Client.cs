@@ -10,7 +10,7 @@ namespace AuthServer.Models
     public class Client
     {
         [BsonId]
-        public ObjectId BsonID { get; set; }
+        public ObjectId _id { get; set; }
         public string ClientID { get; set; }
         public IEnumerable<string> ClientSecrets { get; set; }
         public string AllowedScopes { get; set; }
